@@ -1,0 +1,548 @@
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.lang.*;
+import java.util.*;
+import java.io.*;
+import com.mysql.jdbc.PreparedStatement;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;  
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashSet;
+public class Prototype9 {
+        static String temp="";
+        static int q=0;
+        static char[] store;
+        static int total=0;
+        
+      static ArrayList<String> temp_list=new ArrayList<String>();
+   
+    static ArrayList<String> remove(ArrayList<String> list)
+     {
+         total=0;
+         boolean check11=true;
+         ArrayList<String> result=new ArrayList<String>();
+         HashSet<String> set=new HashSet<String>();
+         for(String l : list)
+         {
+             if(!set.contains(l))
+             {
+                 if(check11)
+                 {
+                     set.add(l);
+                     result.add(l);
+                     check11=false;
+                 }
+                 else
+                 {
+                     for(String l1:result)
+                     {
+                        String[] string_l=l.split(",");
+                        String[] string_l1=l1.split(",");
+                       ArrayList<Integer> i_l=new ArrayList<Integer>();
+                       ArrayList<Integer> i_l1=new ArrayList<Integer>();
+                       for(int i=0;i<string_l.length;i++)
+                       {
+                           i_l.add(Integer.parseInt(string_l[i]));
+                       }
+                       for(int i=0;i<string_l1.length;i++)
+                       {
+                           i_l1.add(Integer.parseInt(string_l1[i]));
+                       }
+                       int temp_10=i_l1.get(0);
+                       int temp_11=i_l1.get(1);
+                       int temp_00=i_l.get(0);
+                       int temp_01=i_l.get(1);
+                       
+                       if((temp_10<temp_00)&& (temp_11<temp_01))
+                           {
+                           int temp1,temp2;
+                           temp1=i_l.get(0)-4;
+                           temp2=i_l.get(1)-4;
+                          // if(i_l1.get(0)!=temp1 && i_l1.get(1)!=temp2)
+                           if(!((i_l1.get(0)+4)>=i_l.get(0) && (temp_01<=(temp_11+4))))
+                           {
+                             //  result.add(l);
+                              temp_list.clear();
+                               temp_list.add(l);
+                               set.add(l);
+                              // break;
+                           }
+                           else
+                           {
+                               temp_list.clear();
+                               break;
+                           }
+                       }
+                       
+                      else if((i_l1.get(0)>i_l.get(0)) &&(i_l1.get(1)>i_l.get(1)))
+                       {
+                           int temp1,temp2;
+                           temp1=i_l.get(0)+4;
+                           temp2=i_l.get(1)+4;
+                          //if(i_l1.get(0)!=temp1 && i_l1.get(1)!=temp2
+                           if(!((i_l1.get(0)-4)<=i_l.get(0) && (i_l1.get(1)-4)<=i_l.get(1)) )
+                          {
+                              //result.add(l);
+                             temp_list.clear();
+                              temp_list.add(l);
+                              set.add(l);
+                             // break;
+                          }
+                          else
+                           {
+                               temp_list.clear();
+                               break;
+                           }
+                       }
+                      else if((i_l1.get(0)==i_l.get(0)) &&(i_l1.get(1)>i_l.get(1)))
+                       {
+                           int temp2;
+                        
+                           temp2=i_l.get(1)+4;
+                          //if( i_l1.get(1)!=temp2)
+                           if(!((i_l1.get(1)-4)<=i_l.get(1)))
+                          {
+                              //result.add(l);
+                             temp_list.clear();
+                              temp_list.add(l);
+                              set.add(l);
+                             // break;
+                          }
+                          else
+                           {
+                               temp_list.clear();
+                               break;
+                           }
+                       }
+                       
+                      else if((i_l1.get(0)>i_l.get(0)) &&(i_l1.get(1)==i_l.get(1)))
+                       {
+                           int temp1;
+                           temp1=i_l.get(0)+4;
+                        //  if(i_l1.get(0)!=temp1)
+                           if(!((i_l1.get(0)-4)<=i_l.get(0)))
+                          {
+                              //result.add(l);
+                             temp_list.clear();
+                              temp_list.add(l);
+                              set.add(l);
+                             // break;
+                          }
+                          else
+                           {
+                               temp_list.clear();
+                               break;
+                           }
+                       }
+                       
+                      else if((i_l1.get(0)<i_l.get(0)) &&(i_l1.get(1)==i_l.get(1)))
+                       {
+                           int temp1;
+                           temp1=i_l.get(0)+4;
+                        //  if(i_l1.get(0)!=temp1)
+                           if(!((i_l1.get(0)+4)>=i_l.get(0)))
+                          {
+                              //result.add(l);
+                             temp_list.clear();
+                              temp_list.add(l);
+                              set.add(l);
+                             // break;
+                          }
+                          else
+                           {
+                               temp_list.clear();
+                               break;
+                           }
+                       }
+                       
+                      
+                      else if((temp_10==temp_00)&& (temp_11<temp_01))
+                           {
+                           //int temp1,temp2; consider
+                          // temp1=i_l.get(0)-4;
+                        //   temp2=i_l.get(1)-4; consider
+                          // if( i_l1.get(1)!=temp2)
+                           if(!(temp_01<=(temp_11+4)))
+                           {
+                             //  result.add(l);
+                              temp_list.clear();
+                               temp_list.add(l);
+                               set.add(l);
+                              // break;
+                           }
+                           else
+                           {
+                               temp_list.clear();
+                               break;
+                           }
+                       }
+              
+                     }
+                     for(String temp_list_1 : temp_list)
+                     {
+                         result.add(temp_list_1);
+                     }
+                     temp_list.clear();
+                 }
+             }
+            
+         }
+         return result;
+     }
+  
+    
+        
+        
+        public static void main(String args[]) throws IOException
+       {    
+            Scanner input=new Scanner(System.in);  
+            System.out.println("enter the codesetid no.");  
+            int codesetid=input.nextInt();  
+            File file =new File("C:\\Users\\KUMAR\\Documents\\LabRat\\aaaa\\"+codesetid);
+            if(!file.exists())
+            {file.mkdir();
+            }
+		try{
+    Class.forName("com.mysql.jdbc.Driver");
+    Connection connection = DriverManager.getConnection("jdbc:mysql://54.254.101.29:3306/devices","zdbadmin", "z3l4yi23");
+    String query = "SELECT u.uesid,u.`frequency`,u.`repeatcount`,um.activeflag, f.`functionname`, \n" +
+    "(SELECT CONCAT(GROUP_CONCAT(pulse ORDER BY seq )) FROM uespulses uee WHERE uee.`uesid` = ue.uesid AND (uee.frame = \"M\" OR uee.frame = \"T1\")) AS MAINFRAME,\n" +
+    "(SELECT CONCAT(GROUP_CONCAT(pulse ORDER BY seq)) FROM uespulses uee WHERE uee.`uesid` = ue.uesid AND uee.frame = (uee.frame = \"R\" OR uee.frame = \"T2\")) AS REPEATFRAME,\n" +
+    "u.repeatcount, u.codetype\n" +
+    "FROM uesidfunctionmap um, uescodes u, uespulses ue, functions f \n" +
+    "WHERE um.codesetid="+codesetid+" AND um.uesid=u.uesid AND um.activeflag='Y'\n" +
+    "AND f.id=u.functionid\n" +
+    "AND u.uesid=ue.uesid GROUP BY u.uesid";
+        PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query);
+        ResultSet rs = pstmt.executeQuery();
+        int count=66;
+        String[] q=new String[count];
+        int[] freq=new int[count];
+        String[] button =  new String[count];
+        String[] main_fr =  new String[count];
+        String[] repeat_fr =  new String[count];
+        int[] rep_count =  new int[count];
+        String[] code_type =  new String[count]; 
+                        
+                        int i=0;
+                        while(rs.next()){
+			
+                        String s=rs.getString("uesid");
+                        i++;
+                        q[i]=s;
+                        int s1=rs.getInt("frequency");
+                        freq[i]=s1;
+                        String a3 = rs.getString("functionname");
+                        button[i] = a3;
+                        String a4=rs.getString("MAINFRAME");
+                        main_fr[i] =a4;
+                        String a5=rs.getString("REPEATFRAME");
+                        repeat_fr[i] =a5;
+                        int a6=rs.getInt("repeatcount");
+                        rep_count[i] = a6;
+                        String a7= rs.getString("codetype");
+                        code_type[i] =a7;
+                                          
+                   String b[]=new String[8];
+                   
+                   for(int l=0;l<8;l++)
+                      {
+                       b[l]=String.valueOf(0);
+                      }
+                   	
+                   String check1="Full_Repeat";
+                   String check2="Partial_Repeat";
+                   String check3="Toggle";
+                  
+                    //if(code_type[i]=="Full_Repeat")
+                    int result = check1.compareTo( code_type[i]);
+                    if(result==0)
+                    b[0]=String.valueOf(1);
+            
+                    //if(code_type[i]==check2)
+                    result = check2.compareTo( code_type[i]);
+                    if(result==0)
+                    b[0]=String.valueOf(0);
+                
+                    //if(code_type[i]==check3)
+                    result = check3.compareTo( code_type[i]);
+                    if(result==0)
+                    b[1]=String.valueOf(1);                                        
+                    b[2]=String.valueOf(0);
+                    b[3]=String.valueOf(0);
+                    
+                    String rep = Integer.toBinaryString(rep_count[i]);
+                    String rep1=String.format("%4s",rep);
+                    b[4]=rep1;
+                    b[4]=b[4].replaceAll(" ", "0");
+                    
+                                                         
+                    String byte1=(((b[0].concat(b[1])).concat(b[2])).concat(b[3])).concat(b[4]);
+                    
+                    int bi1=Integer.parseInt(byte1);
+                   
+                    System.out.println(byte1+" ");
+                
+        //here we check if the no. of pulse values in main and repeat frame is odd . if odd we add 0 to make it even.
+        String[] main_fr1=main_fr[i].split(",");
+        int main_len=(main_fr1.length);
+        int check33=main_len%2;
+        if(check33==1){
+        main_fr[i]=main_fr[i].concat(",0");
+        main_len++;
+        }
+        
+        String byte3=String.format("%8s",(Integer.toBinaryString(main_len/2))); 
+        byte3=byte3.replaceAll(" ", "0");
+        
+        
+        String[] repeat_fr1=repeat_fr[i].split(",");
+        int repeat_len=(repeat_fr1.length);
+        int check44=repeat_len%2;
+        if(check44==1){
+        repeat_fr[i]=repeat_fr[i].concat(",0");
+        repeat_len++;
+        }
+        
+        String byte4=String.format("%8s",(Integer.toBinaryString(repeat_len/2))); 
+        byte4=byte4.replaceAll(" ", "0");
+        
+        
+                     boolean check=true;
+                     ArrayList<String> x=new ArrayList<String>();
+                     ArrayList<String> y=new ArrayList<String>();
+                   
+                    
+                     String combined_frame;
+                     String mainframe=main_fr[i];
+                     
+                     if(code_type[i]==check1){
+                         combined_frame=mainframe;
+                     }else
+                     combined_frame=(mainframe.concat(",")).concat(repeat_fr[i]);
+                     
+                     String[] l3=combined_frame.split(",");
+                     for(int ii=0;ii<l3.length;ii++)
+        {
+        if(check)
+        {
+           x.add(l3[0]+","+l3[1]); 
+           check=false;
+        }
+        else
+        {
+            if(ii%2!=0 && ii<l3.length-2)
+            {
+        temp=l3[ii+1]+","+l3[ii+2];
+        x.add(temp);
+        }
+        }
+        }
+       
+        y=remove(x);
+        
+        int no_of_unq_smbls=0;
+        for(String lx : y)
+        {
+         no_of_unq_smbls++;
+        }
+        String[] uniq_array=new String[no_of_unq_smbls];
+        int fy=0; 
+        String uniqstring=",";
+        for(String lx : y )
+        {
+         //System.out.println(lx);
+                  uniq_array[fy]=lx;
+                 fy++;
+                 uniqstring=(uniqstring.concat(lx)).concat(",");
+                 System.out.println(lx);
+        }
+        
+        String[] uniqstr=uniqstring.split(",");
+       
+      int[] uniqint=new int[no_of_unq_smbls*2];
+      int pass=1;
+         for(int b3=0;b3<no_of_unq_smbls*2;b3++)
+         {
+          uniqint[b3]=Integer.parseInt(uniqstr[pass]);
+          pass++;
+          
+         }
+       
+        String uniq = Integer.toBinaryString(no_of_unq_smbls);
+        System.out.println(no_of_unq_smbls);
+        
+        String uniq1=String.format("%8s",uniq);
+        String byte2=uniq1.replaceAll(" ", "0");
+       
+        int bi2=Integer.parseInt(byte2);
+        int bi3=Integer.parseInt(byte3);
+        int bi4=Integer.parseInt(byte4);
+        System.out.println(byte2+" ");
+        System.out.println(byte3+" ");
+        System.out.println(byte4+" ");
+        
+        //intializing byte4 and byte6 with 0s for now
+        String byte5=String.format("%8s",(Integer.toBinaryString(0))); 
+        byte5=byte5.replaceAll(" ", "0");
+        System.out.println(byte5+" ");
+        
+        String byte6=String.format("%8s",(Integer.toBinaryString(0))); 
+        byte6=byte6.replaceAll(" ", "0");
+        System.out.println(byte6+" ");
+        
+        //making a bit8 to store binary value of frequency
+                    String byte8=Integer.toBinaryString(freq[i]);
+                    byte8=String.format("%16s",byte8);
+                    byte8=byte8.replaceAll(" ", "0");
+                    String b8_1=(byte8.substring(0,8) );
+                    String b8_2=(byte8.substring(8,16) );
+                    int bi5=Integer.parseInt(byte5);
+                    int bi6=Integer.parseInt(byte6);
+                   
+                    //initializing the .bin file with bit variables that have the binary values
+                    String name_ofButton=button[i];
+                    try (OutputStream out = new FileOutputStream(file.getAbsolutePath()+"\\"+name_ofButton+".bin")) {
+                    out.write(Integer.parseInt(byte1,2));
+                    out.write(Integer.parseInt(byte2,2));
+                
+                    out.write(Integer.parseInt(byte3,2));  
+                    out.write(Integer.parseInt(byte4,2));  
+                    out.write(Integer.parseInt(byte5,2));
+                    out.write(Integer.parseInt(byte6,2));
+                  if(code_type[i]==check3)
+                    {
+                        
+                    out.write(Integer.parseInt(byte4,2));
+                    System.out.println(byte4+" ");
+                    }
+                    //out.write(Integer.parseInt(byte8,2));
+                    out.write(Integer.parseInt(b8_1,2));
+                    System.out.println(b8_1+" ");
+                    out.write(Integer.parseInt(b8_2,2));
+                    System.out.println(b8_2+" ");
+                    for(int b9=0;b9<no_of_unq_smbls*2;b9++)
+                    {//System.out.println(b9);
+                    String byte9=Integer.toBinaryString(uniqint[b9]);
+                    byte9=String.format("%16s",byte9);
+                    byte9=byte9.replaceAll(" ", "0");
+                    String b9_1=(byte9.substring(0,8) );
+                    String b9_2=(byte9.substring(8,16) );
+                    out.write(Integer.parseInt(b9_1,2));
+                    System.out.println(b9_1+" ");
+                    out.write(Integer.parseInt(b9_2,2));
+                    System.out.println(b9_2+"");
+                    }
+                    
+                    
+                    
+                    
+    
+      String arr[]=combined_frame.split(",");
+    
+    int uniq_[]=new int[arr.length];
+    String symbol[]= new String[arr.length];
+    
+    int uniqcount=0;
+    int w=0,u=0,y2=0,pet=1;
+      for(int i5=0;i5<arr.length;i5=i5+2)
+      {int f=Integer.parseInt(arr[i5]);
+      int g=Integer.parseInt(arr[i5+1]);
+      int flag=0;
+      for(int j=0;j<uniq_.length;j=j+2){
+      
+      if(f==uniq_[j]&&g==uniq_[j+1]){
+         flag=1;
+         uniqcount++;
+         break;
+      }}
+              
+      if(flag!=1){
+          uniq_[w]=f;
+          uniq_[w+1]=g;
+          w=w+2;
+                
+          for(int p=0;p<arr.length;p=p+2){
+          if(f==(Integer.parseInt(arr[p]))&&g==(Integer.parseInt(arr[p+1]))){
+          u=p-y2;
+              symbol[u]=String.valueOf(pet);
+            
+          }
+          y2++;
+          }
+              pet++;
+              y2=0;
+          }
+      }
+      int k=0;
+     
+      while(symbol[k]!=null)
+      {
+       k++;}
+      int q9=0;
+      String mainframeindexes[][]=new String[symbol.length][2] ;
+      int yoyo=0;
+      for(int e=0;e<=k-1;e=e+2){
+          String ss = symbol[e];
+      int star = Integer.parseInt(ss);
+       //System.out.print(" ");
+      //System.out.print(star);
+      mainframeindexes[q9][0]=String.format("%4s",(Integer.toBinaryString(star)));
+      mainframeindexes[q9][0]=mainframeindexes[q9][0].replaceAll(" ","0");
+      String ss1;
+      yoyo++;
+          int s11 = 0;
+          if(symbol[e+1]!=null)
+          { ss1=symbol[e+1];
+          s11=Integer.parseInt(ss1);
+          //System.out.print(s11);
+         // System.out.print(" ");
+      mainframeindexes[q9][1]=String.format("%4s",(Integer.toBinaryString(s11)));
+      mainframeindexes[q9][1]=mainframeindexes[q9][1].replaceAll(" ","0");    
+            }
+     q9++;
+     yoyo++;
+    }
+     
+           String name="mainframebytes";
+      
+           for(int i7=0;i7<q9;i7++){
+        String ex;
+            if(mainframeindexes[i7][1]!=null&&mainframeindexes[i7][0]!=null){
+         ex = mainframeindexes[i7][0].concat(mainframeindexes[i7][1]);
+       // System.out.println(ex);
+         out.write(Integer.parseInt(ex,2));
+         System.out.println(ex+" ");
+             //out.write(ex);
+            }
+            else{
+            
+            ex=mainframeindexes[i][0].concat("0000");
+            //System.out.println(ex);
+             out.write(Integer.parseInt(ex,2));
+             System.out.println(ex+" ");
+           
+            }
+        }
+           System.out.println("\n");
+                 
+                    } 
+                      }
+                                        
+                        rs.close();
+			pstmt.close();
+			connection.close();
+                }
+		catch(Exception e){
+		e.printStackTrace();
+		}
+      
+       }
+}
+	
+
