@@ -1,0 +1,297 @@
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.lang.*;
+import java.util.*;
+import java.io.*;
+import com.mysql.jdbc.PreparedStatement;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;  
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashSet;
+public class Prototype7 {
+        static String temp="";
+        static int q=0;
+        static char[] store;
+        static int total=0;
+      
+        public static void main(String args[]) throws IOException
+       {    
+            Scanner input=new Scanner(System.in);  
+            System.out.println("enter the codesetid no.");  
+            int codesetid=input.nextInt();  
+            // please change the output bin file path below
+            File file =new File("C:\\Users\\KUMAR\\Documents\\LabRat\\aaaa\\"+codesetid);
+            if(!file.exists())
+            {file.mkdir();
+            }
+		try{
+    Class.forName("com.mysql.jdbc.Driver");
+    Connection connection = DriverManager.getConnection("jdbc:mysql://54.254.101.29:3306/devices","zdbadmin", "z3l4yi23");
+    String query = "SELECT u.uesid,u.`frequency`,u.`repeatcount`,um.activeflag, f.`functionname`, \n" +
+    "(SELECT CONCAT(GROUP_CONCAT(pulse ORDER BY seq )) FROM uespulses uee WHERE uee.`uesid` = ue.uesid AND (uee.frame = \"M\" OR uee.frame = \"T1\")) AS MAINFRAME,\n" +
+    "(SELECT CONCAT(GROUP_CONCAT(pulse ORDER BY seq)) FROM uespulses uee WHERE uee.`uesid` = ue.uesid AND uee.frame = (uee.frame = \"R\" OR uee.frame = \"T2\")) AS REPEATFRAME,\n" +
+    "u.repeatcount, u.codetype\n" +
+    "FROM uesidfunctionmap um, uescodes u, uespulses ue, functions f \n" +
+    "WHERE um.codesetid="+codesetid+" AND um.uesid=u.uesid AND um.activeflag='Y'\n" +
+    "AND f.id=u.functionid\n" +
+    "AND u.uesid=ue.uesid GROUP BY u.uesid";
+                PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery();
+
+                String q, button, main_fr,repeat_fr;
+                int rep_count,freq;
+                String code_type; 
+                int i=0;
+                while(rs.next()){
+
+                String s=rs.getString("uesid");
+                i++;
+                q=s;
+                int s1=rs.getInt("frequency");
+                freq=s1;
+                String a3 = rs.getString("functionname");
+                button = a3;
+                String a4=rs.getString("MAINFRAME");
+                main_fr =a4;
+                String a5=rs.getString("REPEATFRAME");
+                repeat_fr =a5;
+                int a6=rs.getInt("repeatcount");
+                rep_count = a6;
+                String a7= rs.getString("codetype");
+                code_type =a7;
+
+                String b[]=new String[8];
+
+                for(int l=0;l<8;l++)
+                  {
+                   b[l]=String.valueOf(0);
+                  }
+
+                String check1="Full_Repeat";
+                String check2="Partial_Repeat";
+                String check3="Toggle";
+                int result=0;
+                result = check1.compareTo(code_type);
+                if(result==0)
+                b[0]=String.valueOf(1);
+
+                result = check2.compareTo(code_type);
+                if(result==0)
+                b[0]=String.valueOf(0);
+
+                result = check3.compareTo(code_type);
+                if(result==0)
+                b[1]=String.valueOf(1);
+
+                b[2]=String.valueOf(0);
+                b[3]=String.valueOf(0);
+
+                String rep = Integer.toBinaryString(rep_count);
+                String rep1=String.format("%4s",rep);
+                b[4]=rep1;
+                b[4]=b[4].replaceAll(" ", "0");
+
+                String byte1=(((b[0].concat(b[1])).concat(b[2])).concat(b[3])).concat(b[4]);
+
+                //here we check if the no. of pulse values in main and repeat frame is odd . if odd we add 0 to make it even.
+                String[] main_fr1=main_fr.split(",");
+                int main_len=(main_fr1.length);
+                int check33=main_len%2;
+                if(check33==1){
+                main_fr=main_fr.concat(",0");
+                main_len++;
+                }    
+
+                String byte3=String.format("%8s",(Integer.toBinaryString(main_len/2))); 
+                byte3=byte3.replaceAll(" ", "0");
+
+                String[] repeat_fr1=repeat_fr.split(",");
+                int repeat_len=(repeat_fr1.length);
+                int check44=repeat_len%2;
+                if(check44==1){
+                repeat_fr=repeat_fr.concat(",0");
+                repeat_len++;
+                }
+
+                String byte4=String.format("%8s",(Integer.toBinaryString(repeat_len/2))); 
+                byte4=byte4.replaceAll(" ", "0");
+
+            //intializing byte4 and byte6 with 0s for now
+            String byte5=String.format("%8s",(Integer.toBinaryString(0))); 
+            byte5=byte5.replaceAll(" ", "0");
+            
+            String byte6=String.format("%8s",(Integer.toBinaryString(0))); 
+            byte6=byte6.replaceAll(" ", "0");
+
+            //making a bit8 to store binary value of frequency
+            String byte8=Integer.toBinaryString(freq);
+            byte8=String.format("%16s",byte8);
+            byte8=byte8.replaceAll(" ", "0");
+            String b8_1=(byte8.substring(0,8) );
+            String b8_2=(byte8.substring(8,16) );
+            int bi5=Integer.parseInt(byte5);
+            int bi6=Integer.parseInt(byte6);
+
+            //initializing the .bin file with bit variables that have the binary values
+            String name_ofButton=button;
+            try (OutputStream out = new FileOutputStream(file.getAbsolutePath()+"\\"+name_ofButton+".bin")) {
+
+            String combined_frame;
+            String mainframe=main_fr;
+
+            if(code_type==check1){
+                 combined_frame=mainframe;
+            }else
+            combined_frame=(mainframe.concat(",")).concat(repeat_fr);
+
+            String arr[]=combined_frame.split(",");
+
+            int uniq[]=new int[arr.length];
+            String symbol[]= new String[arr.length];
+            int uniqcount=0;
+            int w=0,u=0,y=0,pet=1;
+              for( i=0;i<arr.length;i=i+2)
+              {int f=Integer.parseInt(arr[i]);
+              int g=Integer.parseInt(arr[i+1]);
+              int flag=0;
+
+              for(int j=0;j<uniq.length;j=j+2){
+     if(((f<=(uniq[j])+4)&&(f>=(uniq[j])-4))&&((g<=(uniq[j+1])+4)&&(g>=(uniq[j+1])-4))){
+         flag=1;
+        
+         break;
+     }}
+              
+      if(flag!=1){
+          uniq[w]=f;
+          uniq[w+1]=g;
+          w=w+2;
+         uniqcount++;        
+          for(int p=0;p<arr.length;p=p+2){
+          if(f<=(Integer.parseInt(arr[p])+4)&&f>=(Integer.parseInt(arr[p])-4)&&(g<=(Integer.parseInt(arr[p+1])+4)&&g>=(Integer.parseInt(arr[p+1])-4))){
+          u=p-y;
+              symbol[u]=String.valueOf(pet);
+        }
+          y++;
+          }
+             pet++;
+              y=0;
+          } }
+             
+     int k=0;
+      int c9=0;
+      while(uniq[k]!=0)
+      {
+      k=k+2;
+      c9++;
+      }
+      System.out.println(c9);
+        String item2 = Integer.toBinaryString(c9);
+        String uniq1=String.format("%8s",item2);
+        String byte2=uniq1.replaceAll(" ", "0");
+          
+            out.write(Integer.parseInt(byte1,2));
+            System.out.println(byte1+" 1");
+            out.write(Integer.parseInt(byte2,2));
+            System.out.println(byte2+" 1");
+            out.write(Integer.parseInt(byte3,2));  
+            System.out.println(byte3+" 1");
+            out.write(Integer.parseInt(byte4,2));  
+            System.out.println(byte4+" 1");
+            out.write(Integer.parseInt(byte5,2));
+            System.out.println(byte5+" 1");
+            out.write(Integer.parseInt(byte6,2));
+            System.out.println(byte6+" 1");
+            if(code_type==check3)
+            {
+
+            out.write(Integer.parseInt(byte4,2));
+            System.out.println(byte4+" 1");
+            }
+            out.write(Integer.parseInt(b8_1,2));
+            System.out.println(b8_1+" 1");
+            out.write(Integer.parseInt(b8_2,2));
+            System.out.println(b8_2+" 1");
+            k=0;    
+        while(uniq[k]!=0)
+      {
+        String byte9=Integer.toBinaryString(uniq[k]);
+        byte9=String.format("%16s",byte9);
+        byte9=byte9.replaceAll(" ", "0");
+        String b9_1=(byte9.substring(0,8) );
+        String b9_2=(byte9.substring(8,16) );
+        out.write(Integer.parseInt(b9_1,2));
+        System.out.println(b9_1+"  2");
+        out.write(Integer.parseInt(b9_2,2));
+        System.out.println(b9_2+"  2");
+
+        byte9=Integer.toBinaryString(uniq[k+1]);
+        byte9=String.format("%16s",byte9);
+        byte9=byte9.replaceAll(" ", "0");
+        b9_1=(byte9.substring(0,8) );
+        b9_2=(byte9.substring(8,16) );
+        out.write(Integer.parseInt(b9_1,2));
+         System.out.println(b9_1+"  2");
+        out.write(Integer.parseInt(b9_2,2));
+         System.out.println(b9_2+"  2");
+    
+      k=k+2;
+      }
+      k=0;
+      /*System.out.println("\n\nThe array is: ");
+      for(int h=0;h<arr.length;h++){System.out.print(" "+arr[h]);}*/
+      //System.out.println("\nsymbols/petnames are : ");
+      while(symbol[k]!=null)
+      {
+      k++;}
+      //Actual mainframe indexing starts from here
+      
+      int q2=0;
+      String mainframeindexes[][]=new String[symbol.length][2] ;
+      for(int e=0;e<=k-1;e=e+2){
+          String ss = symbol[e];
+      int s2 = Integer.parseInt(ss);
+      mainframeindexes[q2][0]=String.format("%4s",(Integer.toBinaryString(s2)));
+      mainframeindexes[q2][0]=mainframeindexes[q2][0].replaceAll(" ","0");
+      
+          String ss1;
+          int s12 = 0;
+          if(symbol[e+1]!=null)
+          { ss1=symbol[e+1];
+          s12=Integer.parseInt(ss1);
+          
+      mainframeindexes[q2][1]=String.format("%4s",(Integer.toBinaryString(s12)));
+      mainframeindexes[q2][1]=mainframeindexes[q2][1].replaceAll(" ","0");    
+      }
+     // System.out.println("index "+q2+1+" " +mainframeindexes[q2][1]);
+      q2++;
+    }
+      for( i=0;i<q2;i++){
+        String ex;
+            if(mainframeindexes[i][1]!=null&&mainframeindexes[i][0]!=null){
+            ex = mainframeindexes[i][0].concat(mainframeindexes[i][1]);
+            System.out.println(ex+"  3");
+            out.write(Integer.parseInt(ex,2));
+            }
+            else{
+            ex=mainframeindexes[i][0].concat("0000");
+            System.out.println(ex+"  3");
+            out.write(Integer.parseInt(ex,2));
+        
+            } }     }System.out.println("\n"); }
+                                        
+                        rs.close();
+			pstmt.close();
+			connection.close();
+                }
+		catch(Exception e)
+                {
+		e.printStackTrace();
+		} } }
+	
+
