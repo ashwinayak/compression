@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.io.IOException; 
 import java.util.Scanner;  
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class Prototype7 {
 
                 result = check3.compareTo(code_type);
                 if(result==0)
-                b[1]=String.valueOf(1);
+                b[1]=String.valueOf(1); 
 
                 b[2]=String.valueOf(0);
                 b[3]=String.valueOf(0);
