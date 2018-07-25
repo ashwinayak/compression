@@ -94,7 +94,7 @@ public class Prototype7 {
                 String rep = Integer.toBinaryString(rep_count);
                 String rep1=String.format("%4s",rep);
                 b[4]=rep1;
-                b[4]=b[4].replaceAll(" ", "0");
+                b[4]=b[4].replaceAll(" ", "0");       
 
                 String byte1=(((b[0].concat(b[1])).concat(b[2])).concat(b[3])).concat(b[4]);
 
