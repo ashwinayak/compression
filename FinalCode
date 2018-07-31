@@ -90,6 +90,7 @@ public class Prototype7 {
 
                 b[2]=String.valueOf(0);
                 b[3]=String.valueOf(0);
+		
 
                 String rep = Integer.toBinaryString(rep_count);
                 String rep1=String.format("%4s",rep);
