@@ -42,7 +42,7 @@ public class Prototype7 {
     "AND u.uesid=ue.uesid GROUP BY u.uesid";
                 PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query);
                 ResultSet rs = pstmt.executeQuery();
-
+      
                 String q, button, main_fr,repeat_fr;
                 int rep_count,freq;
                 String code_type; 
