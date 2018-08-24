@@ -28,7 +28,7 @@ public class Prototype7 {
             File file =new File("C:\\Users\\KUMAR\\Documents\\LabRat\\aaaa\\"+codesetid);
             if(!file.exists())
             {file.mkdir();
-            }
+            }     
 		try{
     Class.forName("com.mysql.jdbc.Driver");
     Connection connection = DriverManager.getConnection("jdbc:mysql://54.254.101.29:3306/devices","zdbadmin", "z3l4yi23");
