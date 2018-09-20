@@ -16,7 +16,7 @@ import java.util.HashSet;
 public class Prototype7 {
         static String temp="";
         static int q=0;
-        static char[] store;
+        static char[] store; 
         static int total=0;
       
         public static void main(String args[]) throws IOException
